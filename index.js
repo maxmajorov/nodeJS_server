@@ -1,17 +1,12 @@
+const http = require('http');
+const { getUsers, addUser } = require('./repository');
 // const express = require('express')
-const http = require('http')
 // const cors = require('cors')
+
 const port = process.env.PORT || 3010
 
 // const app = express()
-
 // app.use(cors()) // не работает???
-
-const users = [
-    { id: 1, name: "Olga" },
-    { id: 2, name: "Pavel" },
-    { id: 3, name: "Karina" },
-]
 
 const cors = (response, request) => {
     // Set CORS headers
@@ -34,10 +29,15 @@ const requestHandler = (request, response) => {
 
     switch (request.url) {
         case '/':
-            response.write(`{ "id": "1", "user": "Maxim" }`)
+            response.write(`Hello! It's my first server on nodeJS!`)
             break;
         case '/users':
-            response.write(JSON.stringify(users))
+            if (request.method === 'POST') {
+                addUser('Dasha')
+                response.write(JSON.stringify({ success: true }))
+            } else {
+                response.write(JSON.stringify(getUsers()))
+            }
             break;
         case '/lessons':
             response.write('USERS LIST')
