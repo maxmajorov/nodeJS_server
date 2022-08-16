@@ -1,5 +1,6 @@
 const http = require('http');
 const { getUsers, addUser } = require('./repository');
+const { usersController } = require('./usersController');
 // const express = require('express')
 // const cors = require('cors')
 
@@ -32,12 +33,7 @@ const requestHandler = (request, response) => {
             response.write(`Hello! It's my first server on nodeJS!`)
             break;
         case '/users':
-            if (request.method === 'POST') {
-                addUser('Dasha')
-                response.write(JSON.stringify({ success: true }))
-            } else {
-                response.write(JSON.stringify(getUsers()))
-            }
+            usersController(request, response)
             break;
         case '/lessons':
             response.write('USERS LIST')
