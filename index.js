@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors')
-const { getUsers, addUser } = require('./repository');
+const users = require('./routers/users-router')
+
 
 const port = process.env.PORT || 3010
 
@@ -10,23 +11,12 @@ process.on('unhandledRejection', (reason, p) => console.log(reason, p))
 // create expres app
 const app = express()
 app.use(cors())
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.text());
 
 
 // set routes
-app.get('/users', async (request, response) => {
-    let users = await getUsers()
-    response.send(JSON.stringify(users))
-
-})
-
-app.post('/users', async (request, response) => {
-    console.log(request.body)
-    let result = await addUser(request.body)
-    response.send(JSON.stringify({ success: true }))
-
-})
+app.use('/users', users)
 
 app.get('/tasks', async (request, response) => {
     response.send('tasks')
