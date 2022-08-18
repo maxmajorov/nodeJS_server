@@ -1,53 +1,43 @@
-const http = require('http');
-const { usersController } = require('./usersController');
-// const express = require('express')
-// const cors = require('cors')
+const express = require('express')
+const bodyParser = require('body-parser');
+const cors = require('cors')
+const { getUsers, addUser } = require('./repository');
 
 const port = process.env.PORT || 3010
 
 process.on('unhandledRejection', (reason, p) => console.log(reason, p))
 
-// const app = express()
-// app.use(cors()) // не работает???
-
-const cors = (response, request) => {
-    // Set CORS headers
-    response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Request-Method', '*');
-    response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-    response.setHeader('Access-Control-Allow-Headers', '*');
-    if (request.method === 'OPTIONS') {
-        request.writeHead(200);
-        response.end();
-        return rtue;
-    }
-    return false
-}
+// create expres app
+const app = express()
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
-const requestHandler = (request, response) => {
+// set routes
+app.get('/users', async (request, response) => {
+    let users = await getUsers()
+    response.send(JSON.stringify(users))
 
-    if (cors(response, request)) return
+})
 
-    switch (request.url) {
-        case '/':
-            response.write(`Hello! It's my first server on nodeJS!`)
-            break;
-        case '/users':
-            usersController(request, response)
-            break;
-        case '/lessons':
-            response.write('USERS LIST')
-            response.end()
-            break;
-        default:
-            response.write('PAGE NOT FOUND')
-            response.end()
-    }
-}
+app.post('/users', async (request, response) => {
+    console.log(request.body)
+    let result = await addUser(request.body)
+    response.send(JSON.stringify({ success: true }))
 
-const server = http.createServer(requestHandler)
+})
 
-server.listen(port, () => {
+app.get('/tasks', async (request, response) => {
+    response.send('tasks')
+})
+
+
+// default route
+app.use((req, res) => res.send('Page not found'))
+
+
+
+app.listen(port, () => {
     console.log(`Server is running at port ${port}...`);
 })

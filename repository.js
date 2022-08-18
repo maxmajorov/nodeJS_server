@@ -9,7 +9,7 @@ const getUsers = () => {
 
 const addUser = async (name) => {
     let users = await getUsers()
-    users.push({ id: Math.random() * 100, name })
+    users.push({ id: Math.random() * 100, name: name })
 
     return writeJSONToFile("db/users.json", users)
 }
