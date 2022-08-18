@@ -11,8 +11,8 @@ process.on('unhandledRejection', (reason, p) => console.log(reason, p))
 // create expres app
 const app = express()
 app.use(cors())
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.text());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 // set routes

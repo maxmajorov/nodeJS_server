@@ -11,6 +11,11 @@ router.use((req, res, next) => {
 // define the home page route
 router.get('/', async (request, response) => {
     let users = await getUsers()
+
+    if (!!request.query.search) {
+        users = users.filter(u => u.name.indexOf(request.query.search) > -1)
+    }
+
     response.send(users)
 
 })
@@ -30,7 +35,7 @@ router.get('/:id', async (request, response) => {
 
 router.post('/', async (request, response) => {
     console.log(request.body)
-    let result = await addUser(request.body)
+    let result = await addUser(request.body.name)
     response.send({ success: true })
 
 })
