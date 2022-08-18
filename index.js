@@ -38,11 +38,12 @@ const requestHandler = (request, response) => {
             break;
         case '/lessons':
             response.write('USERS LIST')
+            response.end()
             break;
         default:
             response.write('PAGE NOT FOUND')
+            response.end()
     }
-    response.end()
 }
 
 const server = http.createServer(requestHandler)
