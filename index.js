@@ -1,10 +1,11 @@
 const http = require('http');
-const { getUsers, addUser } = require('./repository');
 const { usersController } = require('./usersController');
 // const express = require('express')
 // const cors = require('cors')
 
 const port = process.env.PORT || 3010
+
+process.on('unhandledRejection', (reason, p) => console.log(reason, p))
 
 // const app = express()
 // app.use(cors()) // не работает???
@@ -46,4 +47,6 @@ const requestHandler = (request, response) => {
 
 const server = http.createServer(requestHandler)
 
-server.listen(port)
+server.listen(port, () => {
+    console.log(`Server is running at port ${port}...`);
+})

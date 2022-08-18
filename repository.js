@@ -1,23 +1,17 @@
 const fs = require("fs");
-
-// const users = [
-//     { id: 1, name: "Olga" },
-//     { id: 2, name: "Pavel" },
-//     { id: 3, name: "Karina" },
-// ]
-
+const { readJSONFromFile } = require('../back_dev/utils/fs-read');
+const { writeJSONToFile } = require('../back_dev/utils/fs-write');
 
 const getUsers = () => {
-    return new Promise((res, rej) => {
-        fs.readFile("db/users.json", function (err, buf) {
-            // res(JSON.parse(buf));
-            res(buf.toString())
-        });
-    })
+
+    return readJSONFromFile("db/users.json")
 }
 
-const addUser = (name) => {
-    users.push({ id: 4, name })
+const addUser = async (name) => {
+    let users = await getUsers()
+    users.push({ id: Math.random() * 100, name })
+
+    return writeJSONToFile("db/users.json", users)
 }
 
 exports.getUsers = getUsers
