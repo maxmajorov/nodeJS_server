@@ -4,7 +4,7 @@ const { writeJSONToFile } = require('../back_dev/utils/fs-write');
 const { User } = require('./schems/users-schema');
 
 const getUsers = () => {
-    return readJSONFromFile("db/users.json")
+    return User.find()
 }
 
 const addUser = async (name) => {
