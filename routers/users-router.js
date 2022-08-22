@@ -35,7 +35,7 @@ router.get('/:id', async (request, response) => {
 
 router.post('/', async (request, response) => {
     console.log(request.body)
-    let result = await addUser(request.body.name)
+    await addUser(request.body.name)
     response.send({ success: true })
 
 })

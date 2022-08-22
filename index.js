@@ -13,8 +13,7 @@ process.on('unhandledRejection', (reason, p) => console.log(reason, p))
 main().catch(err => console.log(err));
 
 async function main() {
-  let con = await mongoose.connect('mongodb://localhost:27017/first-db');
-  console.log(con)
+  await mongoose.connect('mongodb://localhost:27017/first-db');
 }
 
 // create expres app
