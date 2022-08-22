@@ -8,11 +8,16 @@ const getUsers = () => {
 }
 
 const addUser = async (name) => {
-
     const newUser = await new User({name});
     return newUser.save();
+}
 
+const removeUser = async (id) => {
+    console.log(id)
+    const user = await User.deleteOne({id});
+    // return user.save();
 }
 
 exports.getUsers = getUsers
 exports.addUser = addUser
+exports.removeUser = removeUser

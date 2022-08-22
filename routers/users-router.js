@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getUsers, addUser } = require('../repository');
+const { getUsers, addUser, removeUser } = require('../repository');
 
 
 // middleware that is specific to this router
@@ -38,6 +38,12 @@ router.post('/', async (request, response) => {
     await addUser(request.body.name)
     response.send({ success: true })
 
+})
+
+router.delete('/:id', async (request, response) => { 
+    console.log(request.params)   
+    await removeUser(request.params.id)
+    response.send({ success: true })
 })
 
 module.exports = router
