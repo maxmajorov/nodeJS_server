@@ -2,11 +2,20 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors')
 const users = require('./routers/users-router')
+const mongoose = require('mongoose');
 
 
 const port = process.env.PORT || 3010
 
 process.on('unhandledRejection', (reason, p) => console.log(reason, p))
+
+// connect to database
+main().catch(err => console.log(err));
+
+async function main() {
+  let con = await mongoose.connect('mongodb://localhost:27017/first-db');
+  console.log(con)
+}
 
 // create expres app
 const app = express()
