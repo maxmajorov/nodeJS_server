@@ -10,8 +10,13 @@ const getUsers = (search) => {
 }
 
 const getUser = (id) => {
-    console.log(' BACK ', id)
     return User.findOne({_id: id})
+}
+
+const updateUser = (id, name, age) => {
+  
+    const user = getUser(id)
+    return user.updateOne({name, age})
 }
 
 const addUser = async (name, age) => {
@@ -29,5 +34,6 @@ const removeUser = async (id) => {
 
 exports.getUsers = getUsers
 exports.getUser = getUser
+exports.updateUser = updateUser
 exports.addUser = addUser
 exports.removeUser = removeUser
