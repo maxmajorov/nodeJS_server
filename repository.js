@@ -9,6 +9,11 @@ const getUsers = (search) => {
     }
 }
 
+const getUser = (id) => {
+    console.log(' BACK ', id)
+    return User.findOne({_id: id})
+}
+
 const addUser = async (name, age) => {
     const newUser = await new User(
         {
@@ -23,5 +28,6 @@ const removeUser = async (id) => {
 }
 
 exports.getUsers = getUsers
+exports.getUser = getUser
 exports.addUser = addUser
 exports.removeUser = removeUser
