@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 
 // set routes
 app.use('/users', users)
-app.use('/chat', chat)
+// app.use('/chat', chat)
 
 app.get('/tasks', async (request, response) => {
     response.send('tasks')
@@ -34,6 +34,8 @@ app.get('/tasks', async (request, response) => {
 
 // default route
 app.use((req, res) => res.send('Page not found'))
+
+
 
 app.listen(port, () => {
     console.log(`Server is running at port ${port}...`);
