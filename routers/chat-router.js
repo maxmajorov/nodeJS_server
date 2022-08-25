@@ -20,8 +20,14 @@ const io = new Server(server, {
     }
   });
 
+const messages = [
+    { _id: 1, message: "Hello", user: { id: 1, name: "Max" } },
+    { _id: 2, message: "Hi, Max!", user: { id: 2, name: "Olga" } },
+  ]
+
+
 app.get('/chat', async (request, response) => {
-    response.send('Hello, WS Server')
+    response.send('chat messages')
 })
 
 // socket 
@@ -31,6 +37,10 @@ io.on('connection', (chatSocket) => {
     chatSocket.on('client-message-send', (message) => {
          console.log( message);
     })
+    // Send messages to client
+    chatSocket.emit('init-message-published', messages);
+  
+
     // send message all connected users
     chatSocket.emit('hello', 'Привет')
     // disconnect
