@@ -20,10 +20,11 @@ const io = new Server(server, {
     }
   });
 
-const messages = [
-    { _id: 1, message: "Hello", user: { id: 1, name: "Max" } },
-    { _id: 2, message: "Hi, Max!", user: { id: 2, name: "Olga" } },
-  ]
+let users = new Map()
+const messages = []
+
+
+ 
 
 
 app.get('/chat', async (request, response) => {
@@ -33,9 +34,20 @@ app.get('/chat', async (request, response) => {
 // socket 
 io.on('connection', (chatSocket) => {
     console.log('a user connected');
+
+    users.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anon' })
+
+    chatSocket.on('set-new-user', (name) => {
+        const newUser =  users.get(chatSocket)
+        newUser.name = name
+    });
     
     chatSocket.on('client-message-send', (message) => {
-        const newItem =  { _id: new Date().getTime(), message: message, user: { id: 2, name: "Olga" }}   
+        if (typeof message !== 'string') {
+            return 
+        }
+
+        const newItem =  { _id: new Date().getTime(), message: message, user: { _id: user._id, name:user.name }}   
         messages.push(newItem)
 
         io.emit('new-message-send', newItem)
@@ -51,6 +63,8 @@ io.on('connection', (chatSocket) => {
         console.log('disconnected');
     });
 });  
+
+
 
 // io.on('client-message-send', (message) => {
   
