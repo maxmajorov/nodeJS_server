@@ -38,14 +38,14 @@ io.on('connection', (chatSocket) => {
         const newItem =  { _id: new Date().getTime(), message: message, user: { id: 2, name: "Olga" }}   
         messages.push(newItem)
 
-        io.emit('new-mess-send', newItem)
+        io.emit('new-message-send', newItem)
     })
     // Send messages to client
     chatSocket.emit('init-message-published', messages);
   
 
     // send message all connected users
-    chatSocket.emit('hello', 'Привет')
+    chatSocket.emit('greeting', 'Hello')
     // disconnect
     chatSocket.on('disconnect', () => {
         console.log('disconnected');
