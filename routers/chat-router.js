@@ -35,7 +35,10 @@ io.on('connection', (chatSocket) => {
     console.log('a user connected');
     
     chatSocket.on('client-message-send', (message) => {
-         console.log( message);
+        const newItem =  { _id: new Date().getTime(), message: message, user: { id: 2, name: "Olga" }}   
+        messages.push(newItem)
+
+        io.emit('new-mess-send', newItem)
     })
     // Send messages to client
     chatSocket.emit('init-message-published', messages);
