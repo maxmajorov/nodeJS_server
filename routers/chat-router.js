@@ -33,7 +33,7 @@ io.on('connection', (chatSocket) => {
 
     usersState.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anon' })
 
-    chatSocket.on('set-new-user', (name) => {
+    chatSocket.on('client-set-name', (name) => {
         const newUser =  usersState.get(chatSocket)
         newUser.name = name
     });
@@ -50,13 +50,21 @@ io.on('connection', (chatSocket) => {
 
         io.emit('new-message-send', newMessageItem)
     })
+
+    // Typing text
+      chatSocket.on('client-typing-text', () => {
+        console.log("typing")
+        io.emit('user-typing-text', usersState.get(chatSocket))
+    });
     
     // Send messages to client
     chatSocket.emit('init-message-published', messages);
   
-
-    // send message all connected users
-    chatSocket.emit('greeting', 'Hello')
+    // Typing text
+    chatSocket.on('client-typing-text', () => {
+        console.log("typing")
+    });
+    
     // disconnect
     io.on('disconnect', () => {
         console.log('disconnected');
