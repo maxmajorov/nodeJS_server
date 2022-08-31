@@ -3,7 +3,6 @@ const http = require('http');
 const cors = require('cors')
 const router = express.Router()
 const { Server } = require("socket.io");
-const { Socket } = require('dgram');
 
 const port = process.env.PORT || 3009
 
@@ -31,19 +30,22 @@ app.get('/chat', async (request, response) => {
 io.on('connection', (chatSocket) => {
     console.log('a user connected');
 
-    usersState.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anon' })
+    usersState.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anonimus' })
 
+    // SET-CLIENT-NAME
     chatSocket.on('client-set-name', (name) => {
         const newUser =  usersState.get(chatSocket)
         newUser.name = name
+        io.emit('send-userInfo-to-client', newUser)
     });
     
+    // SEND-CLIENT-MESSAGE
     chatSocket.on('client-message-send', (message) => {
-        if (typeof message !== 'string') {
-            return 
+        if (typeof message !== 'string' || message.length > 50) {
+            return 'Message should be less than 50 chars'
         }
 
-        const user =  usersState.get(chatSocket)
+        const user = usersState.get(chatSocket)
 
         let newMessageItem =  { _id: new Date().getTime(), message: message, user: { _id: user._id, name:user.name }}   
         messages.push(newMessageItem)
@@ -51,20 +53,14 @@ io.on('connection', (chatSocket) => {
         io.emit('new-message-send', newMessageItem)
     })
 
-    // Typing text
+    // TYPING-TEXT
       chatSocket.on('client-typing-text', () => {
-        console.log("typing")
         io.emit('user-typing-text', usersState.get(chatSocket))
     });
     
     // Send messages to client
     chatSocket.emit('init-message-published', messages);
   
-    // Typing text
-    chatSocket.on('client-typing-text', () => {
-        console.log("typing")
-    });
-    
     // disconnect
     io.on('disconnect', () => {
         console.log('disconnected');
@@ -72,14 +68,7 @@ io.on('connection', (chatSocket) => {
     });
 });  
 
-
-
-// io.on('client-message-send', (message) => {
-  
-// }); 
-
 server.listen(port, () => console.log('connect with WS success'))
   
-
 module.exports = router
 
