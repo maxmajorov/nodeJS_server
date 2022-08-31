@@ -20,12 +20,8 @@ const io = new Server(server, {
     }
   });
 
-let users = new Map()
+let usersState = new Map()
 const messages = []
-
-
- 
-
 
 app.get('/chat', async (request, response) => {
     response.send('chat messages')
@@ -35,10 +31,10 @@ app.get('/chat', async (request, response) => {
 io.on('connection', (chatSocket) => {
     console.log('a user connected');
 
-    users.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anon' })
+    usersState.set(chatSocket, { _id: new Date().getTime().toString(), name: 'anon' })
 
     chatSocket.on('set-new-user', (name) => {
-        const newUser =  users.get(chatSocket)
+        const newUser =  usersState.get(chatSocket)
         newUser.name = name
     });
     
@@ -47,11 +43,14 @@ io.on('connection', (chatSocket) => {
             return 
         }
 
-        const newItem =  { _id: new Date().getTime(), message: message, user: { _id: user._id, name:user.name }}   
-        messages.push(newItem)
+        const user =  usersState.get(chatSocket)
 
-        io.emit('new-message-send', newItem)
+        let newMessageItem =  { _id: new Date().getTime(), message: message, user: { _id: user._id, name:user.name }}   
+        messages.push(newMessageItem)
+
+        io.emit('new-message-send', newMessageItem)
     })
+    
     // Send messages to client
     chatSocket.emit('init-message-published', messages);
   
@@ -59,8 +58,9 @@ io.on('connection', (chatSocket) => {
     // send message all connected users
     chatSocket.emit('greeting', 'Hello')
     // disconnect
-    chatSocket.on('disconnect', () => {
+    io.on('disconnect', () => {
         console.log('disconnected');
+        usersState.delete(chatSocket)
     });
 });  
 
