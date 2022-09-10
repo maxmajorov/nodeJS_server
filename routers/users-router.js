@@ -40,7 +40,7 @@ router.put('/:id', async (request, response) => {
 })
 
 router.post('/', async (request, response) => {
-    await addUser(request.body.name, request.body.age)
+    await addUser(request.body)
     response.send({ success: true })
 
 })

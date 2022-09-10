@@ -19,12 +19,8 @@ const updateUser = (id, name, age) => {
     return user.updateOne({name, age})
 }
 
-const addUser = async (name, age) => {
-    const newUser = await new User(
-        {
-            name,
-            age 
-        });
+const addUser = async (user) => {
+    const newUser = await new User(user);
     return newUser.save();
 }
 
